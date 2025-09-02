@@ -1,36 +1,27 @@
-# backend/app.py
-import os
-import firebase_admin
-from firebase_admin import credentials, firestore
-from flask import Flask
+from flask import Flask, jsonify
+from models import get_all_categories 
 
-# --- INICIALIZACIÓN ---
-# Busca la llave que descargaste
-cred = credentials.Certificate("credentials.json") 
-firebase_admin.initialize_app(cred)
-
-# Conéctate a la base de datos de Firestore
-db = firestore.client()
-print("✅ Conectado a Firebase")
-
-# Inicializa la aplicación de Flask
 app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
-# --- RUTAS DE EJEMPLO ---
+# --- RUTAS DE LA API ---
 @app.route('/')
 def hello_world():
     return '¡Hola, mundo! ¡El backend de LimpiaGest está funcionando!'
 
-# --- PRUEBA DE CONEXIÓN A LA BASE DE DATOS ---
+@app.route('/api/categories', methods=['GET'])
+def list_categories():
+    all_categories = get_all_categories()
+    return jsonify(all_categories), 200
+
 @app.route('/test-db')
 def test_db():
     try:
-        # Intenta leer una colección (aunque no exista)
+        from database import db 
         users_ref = db.collection('users').limit(1).get()
-        return "✅ ¡Conexión con Firestore exitosa!"
+        return "✅ ¡Conexión con Firestore exitosa desde la app!"
     except Exception as e:
         return f"❌ Error conectando a Firestore: {e}"
 
-# Para ejecutar la app (opcional por ahora)
 if __name__ == '__main__':
     app.run(debug=True)
