@@ -208,3 +208,10 @@ __marimo__/
 
 # Entorno virtual de Python
 /backend/venv/
+
+# Archivos de entorno y credenciales
+venv/
+*.pyc
+__pycache__/
+credentials.json
+.env
