@@ -215,3 +215,6 @@ venv/
 __pycache__/
 credentials.json
 .env
+
+# Credenciales y secretos
+backend/key.json
